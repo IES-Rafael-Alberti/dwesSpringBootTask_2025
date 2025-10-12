@@ -1,8 +1,8 @@
-package com.example.demo.services;
+package com.example.tasks.services;
 
-import com.example.demo.dto.CreateTaskDTO;
-import com.example.demo.entities.Task;
-import com.example.demo.repositories.TaskRepository;
+import com.example.tasks.dto.CreateTaskDTO;
+import com.example.tasks.entities.Task;
+import com.example.tasks.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,6 @@
-package com.example.demo.repositories;
+package com.example.tasks.repositories;
 
-import com.example.demo.entities.Task;
+import com.example.tasks.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
