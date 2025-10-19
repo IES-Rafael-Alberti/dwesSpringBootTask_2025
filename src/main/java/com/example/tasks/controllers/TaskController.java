@@ -29,6 +29,13 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> tareaPorId(@PathVariable Long id) {
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<Task> create(@RequestBody @Valid CreateTaskDTO dto) {
         Task newTask = Task.builder()
