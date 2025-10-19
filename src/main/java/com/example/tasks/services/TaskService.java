@@ -18,6 +18,10 @@ public class TaskService {
         return (done == null) ? taskRepository.findAll() : taskRepository.findByDone(done);
     }
 
+    public Task showTask(Long id) {
+        return taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+    }
+
     public Task create(CreateTaskDTO dto) {
         Task newTask = Task.builder().title(dto.title()).done(false).build();
         return taskRepository.save(newTask);

@@ -1,49 +1,39 @@
 package com.example.tasks.controllers;
 
 import com.example.tasks.entities.Task;
-import com.example.tasks.repositories.TaskRepository;
 import com.example.tasks.dto.CreateTaskDTO;
+import com.example.tasks.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-
+// Vamos a refactorizar el controlador para que use el servicio TaskService en lugar de interactuar directamente con el repositorio.
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private final TaskRepository repository;
+    private final TaskService taskService;
 
-    public TaskController(TaskRepository repository) {
-        this.repository = repository;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @GetMapping
     public List<Task> list(@RequestParam(required = false) Boolean done) {
-        if (done == null) {
-            return repository.findAll();
-        } else {
-            return repository.findByDone(done);
-        }
+       return taskService.list(done);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> tareaPorId(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Task> taskById(@PathVariable Long id) {
+        Task task= taskService.showTask(id);
+        return ResponseEntity.ok(task);
     }
 
     @PostMapping
     public ResponseEntity<Task> create(@RequestBody @Valid CreateTaskDTO dto) {
-        Task newTask = Task.builder()
-                .title(dto.title())
-                .done(false)
-                .build();
-
-        Task saved = repository.save(newTask);
+        Task saved = taskService.create(dto);
 
         return ResponseEntity
                 .created(URI.create("/tasks/" + saved.getId()))
@@ -52,22 +42,13 @@ public class TaskController {
 
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<Task> toggle(@PathVariable Long id) {
-        Task task = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
-
-        task.setDone(!task.isDone());
-        Task updated = repository.save(task);
-
-        return ResponseEntity.ok(updated);
+        Task toggled = taskService.toggle(id);
+        return ResponseEntity.ok(toggled);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            throw new IllegalArgumentException("Task not found");
-        }
-
-        repository.deleteById(id);
+        taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
