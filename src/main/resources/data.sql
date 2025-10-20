@@ -1,4 +1,4 @@
-INSERT INTO task(id, title, done)
-VALUES (1, 'Revisar scripts', false),
-       (2, 'Preparar guión', true),
-       (3, 'Comunicación empresa', false);
+INSERT INTO task(title, done)
+VALUES ('Revisar scripts', false),
+       ('Preparar guión', true),
+       ('Comunicación empresa', false);
